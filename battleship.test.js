@@ -1,4 +1,5 @@
 import { createShip } from './index.js'
+import { createGameboard } from './gameboard.js'
 
 
 test('ship takes a hit', () => {
@@ -37,3 +38,22 @@ test('is ship sunk?', () => {
     }
     expect(myShip.isSunk()).toBe(false)
 })
+
+test('create a gameboard', () => {
+    const gameboard = createGameboard(3, 3)
+    expect(gameboard.board).toEqual([
+        [{ shipPresent: false }, { shipPresent: false }, { shipPresent: false }],
+        [{ shipPresent: false }, { shipPresent: false }, { shipPresent: false }],
+        [{ shipPresent: false }, { shipPresent: false }, { shipPresent: false }]
+    ])
+})
+
+// test('place a ship', () => {
+//     const gameboard = createGameboard(3, 3)
+//     gameboard.placeShip(0, 0)
+//     expect(gameboard.board).toEqual([
+//         [{ shipPresent: newShip }, { shipPresent: false }, { shipPresent: false }],
+//         [{ shipPresent: false }, { shipPresent: false }, { shipPresent: false }],
+//         [{ shipPresent: false }, { shipPresent: false }, { shipPresent: false }]
+//     ])
+// })

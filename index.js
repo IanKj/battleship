@@ -9,12 +9,7 @@ function createShip(length) {
             this.hitsTaken[locationHit] = 'hit'
         },
         isSunk: function () {
-            console.log(Object.values(this.hitsTaken))
-            const shipStatus = Object.values(this.hitsTaken)
-            function checkIfHit(boolean) {
-                return boolean === true
-            }
-            return shipStatus.every(checkIfHit)
+            return isSunk(this)
         }
     }
     return ship
@@ -26,4 +21,12 @@ function initializeHitsTaken(length) {
         hitsTaken[i] = false
     }
     return hitsTaken
+}
+function isSunk(currentShip) {
+    console.log(Object.values(currentShip.hitsTaken))
+    const shipStatus = Object.values(currentShip.hitsTaken)
+    function checkIfHit(boolean) {
+        return boolean === true
+    }
+    return shipStatus.every(checkIfHit)
 }
