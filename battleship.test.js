@@ -48,12 +48,10 @@ test('create a gameboard', () => {
     ])
 })
 
-// test('place a ship', () => {
-//     const gameboard = createGameboard(3, 3)
-//     gameboard.placeShip(0, 0)
-//     expect(gameboard.board).toEqual([
-//         [{ shipPresent: newShip }, { shipPresent: false }, { shipPresent: false }],
-//         [{ shipPresent: false }, { shipPresent: false }, { shipPresent: false }],
-//         [{ shipPresent: false }, { shipPresent: false }, { shipPresent: false }]
-//     ])
-// })
+test('place a ship', () => {
+    const gameboard = createGameboard(3, 3)
+    gameboard.placeShip(0, 0)
+    expect(gameboard.board[0][0].ship).toHaveProperty('shipLength', 1)
+    expect(gameboard.board[0][0].ship).toHaveProperty('sunkStatus', false)
+    expect(gameboard.board[0][0].ship).toHaveProperty('hitsTaken')
+})

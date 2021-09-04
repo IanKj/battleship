@@ -5,9 +5,9 @@ import { createShip } from './index.js'
 function createGameboard(l, w) {
     const gameBoard = {
         board: genLayout(l, w),
-        // placeShip: function (x, y) {
-        //     return placeShip(x, y, this)
-        // }
+        placeShip: function (x, y) {
+            placeShip(x, y, this.board)
+        }
     }
     return gameBoard
 }
@@ -26,8 +26,9 @@ function genLayout(l, w) {
     return board
 }
 
-// function placeShip(x, y, curentShip) {
-//     console.log(currentShip)
-//     const newShip = createShip(1)
-
-// }
+function placeShip(x, y, currentBoard) {
+    const newShip = createShip(1)
+    currentBoard[x][y].shipPresent = true
+    currentBoard[x][y].ship = newShip
+    console.log(currentBoard[x][y].ship)
+}
