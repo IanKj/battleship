@@ -1,4 +1,5 @@
-import { createShip } from './index.js'
+import { createShip } from './createShip.js'
+import { createPlayers } from './player.js'
 import { createGameboard, checkIfWithinBounds, checkIfAllSunk } from './gameboard.js'
 
 
@@ -19,10 +20,10 @@ test('initialize hits taken object', () => {
 })
 
 test('is ship sunk?', () => {
-    const myShip = createShip(3)
+    const myShip = createShip(1)
     myShip.hitsTaken =
-        [[1, 1], [1, 2], [1, 3], [1, 4], []]
-    myShip.hit(1, 5)
+        [[]]
+    myShip.hit(0, 0)
     //expect(myShip.isSunk()).toBe(true)
     expect(myShip.sunkStatus).toBe(true)
 })
@@ -78,9 +79,7 @@ test('all ships are sunk', () => {
     const gameboard = createGameboard(3, 3)
     gameboard.placeShip(gameboard.board, 1, 0, 0, gameboard, 'onefer')
     gameboard.receiveAttack(0, 0)
-    expect(() => {
-        checkIfAllSunk(gameboard)
-    }).toBe(true)
+    expect(gameboard.allShipsSunk).toEqual(true)
 })
 
 test('NOT all ships are sunk', () => {
@@ -88,7 +87,49 @@ test('NOT all ships are sunk', () => {
     gameboard.placeShip(gameboard.board, 1, 0, 0, gameboard, 'onefer')
     gameboard.placeShip(gameboard.board, 1, 1, 0, gameboard, 'secondShip')
     gameboard.receiveAttack(0, 0)
-    expect(() => {
-        checkIfAllSunk(gameboard)
-    }).toBe(false)
+    expect(checkIfAllSunk(gameboard)).toBe(false)
+    expect(gameboard.allShipsSunk).toEqual(false)
+})
+
+test('human player has a gameboard', () => {
+    const players = createPlayers('human', 'computer', 1, 1)
+    const [human, computer] = players
+    expect(human).toHaveProperty('gameboard')
+})
+
+test('human attacks computer', () => {
+    const players = createPlayers('human', 'computer', 1, 1)
+    const [human, computer] = players
+    computer.gameboard.placeShip(computer.gameboard.board, 1, 0, 0, computer.gameboard, 'onefer')
+    human.attack(computer, 0, 0)
+    expect(computer.gameboard.ships[0].sunkStatus).toEqual(true)
+    expect(computer.gameboard.allShipsSunk).toEqual(true)
+})
+
+test('computer attacks player automatically', () => {
+    const players = createPlayers('human', 'computer', 1, 1)
+    const [human, computer] = players
+    computer.gameboard.placeShip(computer.gameboard.board, 1, 0, 0, computer.gameboard, 'onefer')
+    const spy = jest.spyOn(computer, 'computerAttack')
+    const computerAttacked = computer.computerAttack(human, 0, 0)
+    human.attack(computer, 0, 0)
+    expect(spy).toHaveBeenCalled()
+})
+
+test('computer sinks player battleship', () => {
+    const players = createPlayers('human', 'computer', 1, 1)
+    const [human, computer] = players
+    computer.gameboard.placeShip(computer.gameboard.board, 1, 0, 0, computer.gameboard, 'onefer')
+    human.gameboard.placeShip(human.gameboard.board, 1, 0, 0, human.gameboard, 'onefer')
+    human.attack(computer, 0, 0)
+    expect(human.gameboard.allShipsSunk).toBe(true)
+})
+
+test('log a missed player and computer shot', () => {
+    const players = createPlayers('human', 'computer', 5, 5)
+    const [human, computer] = players
+    human.attack(computer, 0, 0)
+    expect(computer.gameboard.missedShots[0]).toEqual([0, 0])
+    expect(human.gameboard.missedShots[0]).toBeTruthy()
+    console.log(human.gameboard.missedShots[0])
 })

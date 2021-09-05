@@ -1,10 +1,13 @@
 export { createGameboard, checkIfWithinBounds, checkIfAllSunk }
 
-import { createShip } from './index.js'
+import { createShip } from './createShip.js'
 
 function createGameboard(l, w) {
     const gameBoard = {
         board: genLayout(l, w),
+        boardLength: l,
+        boardWidth: w,
+        missedShots: [],
         placeShip: function (board, length, startX, startY, gameboard, shipTitle) {
             placeShip(board, length, startX, startY, this, shipTitle)
         },
@@ -54,18 +57,22 @@ function checkIfWithinBounds(gameboard, length, startX, startY) {
 
 function receiveAttack(x, y, gameboard) {
     gameboard.board[x][y].hit = true
-    const shipName = gameboard.board[x][y].shipPresent
-    for (let ship of gameboard.ships) {
-        if (ship.name === shipName) {
-            ship.hit(x, y)
+    if (gameboard.board[x][y].shipPresent) {
+        const shipName = gameboard.board[x][y].shipPresent
+        for (let ship of gameboard.ships) {
+            if (ship.name === shipName) {
+                ship.hit(x, y)
+                if (checkIfAllSunk(gameboard)) {
+                    gameboard.allShipsSunk = true
+                }
+            }
         }
     }
-    checkIfAllSunk(gameboard)
-
-
+    else {
+        gameboard.missedShots.push([x, y])
+    }
 }
 
 function checkIfAllSunk(gameboard) {
-    return gameboard.ships.every(ship => ship.isSunk === true)
-
+    return gameboard.ships.every(ship => ship.sunkStatus === true)
 }
