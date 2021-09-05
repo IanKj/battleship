@@ -1,12 +1,21 @@
 export { createShip }
 
-function createShip(length) {
+function createShip(length, startX, startY, shipTitle) {
     const ship = {
+        name: shipTitle,
         shipLength: length,
-        sunkStatus: false,
         hitsTaken: initializeHitsTaken(length),
-        hit: function (locationHit) {
-            this.hitsTaken[locationHit] = 'hit'
+        sunkStatus: false,
+        hit: function (x, y) {
+            for (let position of this.hitsTaken) {
+                if (!position[0]) {
+                    position.push(x, y)
+                    if (isSunk(this)) {
+                        this.sunkStatus = true
+                    }
+                    break
+                }
+            }
         },
         isSunk: function () {
             return isSunk(this)
@@ -16,17 +25,16 @@ function createShip(length) {
 }
 
 function initializeHitsTaken(length) {
-    const hitsTaken = {}
-    for (let i = 1; i < length + 1; i++) {
-        hitsTaken[i] = false
+    const hitsTaken = []
+    for (let i = 0; i < length; i++) {
+        hitsTaken.push([])
     }
     return hitsTaken
 }
 function isSunk(currentShip) {
-    console.log(Object.values(currentShip.hitsTaken))
-    const shipStatus = Object.values(currentShip.hitsTaken)
-    function checkIfHit(boolean) {
-        return boolean === true
+    const shipStatus = currentShip.hitsTaken
+    function checkIfHit(arr) {
+        return arr[0]
     }
     return shipStatus.every(checkIfHit)
 }

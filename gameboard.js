@@ -1,13 +1,18 @@
-export { createGameboard }
+export { createGameboard, checkIfWithinBounds, checkIfAllSunk }
 
 import { createShip } from './index.js'
 
 function createGameboard(l, w) {
     const gameBoard = {
         board: genLayout(l, w),
-        placeShip: function (x, y) {
-            placeShip(x, y, this.board)
-        }
+        placeShip: function (board, length, startX, startY, gameboard, shipTitle) {
+            placeShip(board, length, startX, startY, this, shipTitle)
+        },
+        receiveAttack: function (x, y) {
+            receiveAttack(x, y, this)
+        },
+        ships: [],
+        allShipsSunk: false
     }
     return gameBoard
 }
@@ -18,7 +23,8 @@ function genLayout(l, w) {
         board.push([])
         for (let j = 0; j < w; j++) {
             const defaultGridItem = {
-                shipPresent: false
+                shipPresent: false,
+                hit: false
             }
             board[i].push(defaultGridItem)
         }
@@ -26,9 +32,40 @@ function genLayout(l, w) {
     return board
 }
 
-function placeShip(x, y, currentBoard) {
-    const newShip = createShip(1)
-    currentBoard[x][y].shipPresent = true
-    currentBoard[x][y].ship = newShip
-    console.log(currentBoard[x][y].ship)
+function placeShip(currentBoard, length, startX, startY, gameboard, shipTitle) {
+    checkIfWithinBounds(currentBoard, length, startX, startY)
+    const newShip = createShip(length, startX, startY, shipTitle)
+    gameboard.ships.push(newShip)
+    currentBoard[startX][startY].shipPresent = shipTitle
+    currentBoard[startX][startY].ship = newShip
+}
+
+function checkIfWithinBounds(gameboard, length, startX, startY) {
+    let withinBounds = true
+    for (let i = startY; i < startY + length; i++) {
+        if (!gameboard[startX] || !gameboard[startX][i]) {
+            withinBounds = false
+        }
+    }
+    if (withinBounds === false) {
+        throw Error('not within bounds')
+    }
+}
+
+function receiveAttack(x, y, gameboard) {
+    gameboard.board[x][y].hit = true
+    const shipName = gameboard.board[x][y].shipPresent
+    for (let ship of gameboard.ships) {
+        if (ship.name === shipName) {
+            ship.hit(x, y)
+        }
+    }
+    checkIfAllSunk(gameboard)
+
+
+}
+
+function checkIfAllSunk(gameboard) {
+    return gameboard.ships.every(ship => ship.isSunk === true)
+
 }
