@@ -9,8 +9,12 @@ body{
     justify-content: center;
     align-items: center;
 }
-
 .gridContainer {
+    display: flex;
+    width: 1200px;
+    justify-content: space-around;
+}
+.humanContainer, .computerContainer {
     display: grid;
     grid-gap: 1px;
     column-gap: 1px;
@@ -27,9 +31,29 @@ body{
   
 }
 
+.hit {
+    filter:brightness(70%);
+    pointer-events: none;
+    background-color: gray;
+}
+
+.hit:after{
+    display: inline-block;
+    content: "\00d7"; /* This will render the 'X' */
+    color: red;
+    line-height:40px;
+    font-size: 3em;
+    text-align: center;
+    
+}
+
 .grid-item:hover {
     filter: brightness(85%)
 }
-.shipPresent {
-    background-color: green;
+.miss {
+    background-color: blue;
+}
+
+.sunken {
+    background-color: red;
 }

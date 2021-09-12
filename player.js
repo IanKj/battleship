@@ -7,16 +7,14 @@ export { createPlayers, genRandomCoords }
 function createPlayers(human, computer, l, w) {
     const players = [{
         type: human,
-        gameboard: createGameboard(l, w),
+        gameboard: createGameboard(l, w, human),
         attack: function (target, x, y) {
             attack(target, x, y)
         },
-
-
     },
     {
         type: computer,
-        gameboard: createGameboard(l, w),
+        gameboard: createGameboard(l, w, computer),
         computerAttack: function (human, x, y) {
             attack(human, x, y)
         }

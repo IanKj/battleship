@@ -4,29 +4,23 @@ function createShip(length, startX, startY, shipTitle) {
     const ship = {
         name: shipTitle,
         shipLength: length,
-        // hitsTaken: initializeHitsTaken(length),
         hitsTaken: [],
         sunkStatus: false,
-        hit: function (x, y) {
+        hit: function (x, y, target) {
             console.log('hit!')
             let coordToString = `${x},${y}`
             if (!this.hitsTaken.includes(coordToString)) {
                 this.hitsTaken.push(coordToString)
-
+                let currGrid = document.querySelector(`.${target}Container [data-coords="${coordToString}"]`)
+                currGrid.classList.add('hit')
             }
             if (isSunk(this)) {
                 this.sunkStatus = true
+                this.hitsTaken.forEach(hit => {
+                    let currGrid = document.querySelector(`.${target}Container [data-coords="${hit}"]`)
+                    currGrid.classList.add('sunken')
+                })
             }
-            // for (let position of this.hitsTaken) {
-            //     if (!position.length) {
-            //         position.push(x, y)
-            //         if (isSunk(this)) {
-            //             this.sunkStatus = true
-            //         }
-            //         break
-            //     }
-            // }
-            console.log(this)
         },
         isSunk: function () {
             return isSunk(this)
@@ -35,19 +29,6 @@ function createShip(length, startX, startY, shipTitle) {
     return ship
 }
 
-function initializeHitsTaken(length) {
-    const hitsTaken = []
-    for (let i = 0; i < length; i++) {
-        hitsTaken.push([])
-    }
-    return hitsTaken
-}
-
 function isSunk(currentShip) {
     return currentShip.shipLength === currentShip.hitsTaken.length
-    // const shipStatus = currentShip.hitsTaken
-    // function checkIfHit(arr) {
-    //     return arr.length
-    // }
-    // return shipStatus.every(checkIfHit)
 }

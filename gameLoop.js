@@ -4,9 +4,10 @@ import { createGrid } from './domStuff.js'
 export { initGame }
 function initGame() {
     const [human, computer] = createPlayers('human', 'computer', 10, 10)
-    createGrid(human.gameboard)
+    createGrid(human)
+    createGrid(computer)
     placeBattleships(human, battleShips)
-    //placeBattleships(computer, battleShips)
+    placeBattleships(computer, battleShips)
     return [human, computer]
 }
 

@@ -2,8 +2,9 @@ export { createGameboard, checkIfWithinBounds, checkIfAllSunk }
 
 import { createShip } from './createShip.js'
 
-function createGameboard(l, w) {
+function createGameboard(l, w, type) {
     const gameBoard = {
+        type,
         board: genLayout(l, w),
         boardLength: l,
         boardWidth: w,
@@ -73,20 +74,20 @@ function checkIfWithinBounds(gameboard, length, startX, startY) {
 }
 
 function receiveAttack(x, y, gameboard) {
+    const target = gameboard.type
+    let coordToString = `${x},${y}`
     gameboard.board[x][y].hit = true
     if (gameboard.board[x][y].shipPresent) {
-        const shipName = gameboard.board[x][y].shipPresent
-        for (let ship of gameboard.ships) {
-            if (ship.name === shipName) {
-                ship.hit(x, y)
-                if (checkIfAllSunk(gameboard)) {
-                    gameboard.allShipsSunk = true
-                }
-            }
+        const currShip = gameboard.board[x][y].ship
+        currShip.hit(x, y, target)
+        if (checkIfAllSunk(gameboard)) {
+            gameboard.allShipsSunk = true
         }
     }
     else {
         gameboard.missedShots.push([x, y])
+        let currGrid = document.querySelector(`.${target}Container [data-coords="${coordToString}"]`)
+        currGrid.classList.add('miss')
     }
 }
 
