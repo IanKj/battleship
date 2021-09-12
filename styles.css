@@ -1,0 +1,35 @@
+:root {
+    --grid-cols: 1;
+    --grid-rows: 1;
+}
+
+body{ 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.gridContainer {
+    display: grid;
+    grid-gap: 1px;
+    column-gap: 1px;
+    grid-template-rows: repeat(var(--grid-rows), 1fr);
+    grid-template-columns: repeat(var(--grid-cols), 1fr);
+    max-width: 1000px;
+    min-width: 500px;
+}
+  
+.grid-item {
+    height: 40px;
+    background-color: gray;
+    text-align: center;
+  
+}
+
+.grid-item:hover {
+    filter: brightness(85%)
+}
+.shipPresent {
+    background-color: green;
+}

@@ -1,7 +1,7 @@
 import { createShip } from './createShip.js'
-import { createPlayers } from './player.js'
+import { createPlayers, genRandomCoords } from './player.js'
 import { createGameboard, checkIfWithinBounds, checkIfAllSunk } from './gameboard.js'
-
+import { initGame } from './gameLoop.js'
 
 test('ship takes a hit', () => {
     const myShip = createShip(5)
@@ -106,7 +106,7 @@ test('human attacks computer', () => {
     expect(computer.gameboard.allShipsSunk).toEqual(true)
 })
 
-test('computer attacks player automatically', () => {
+test.skip('computer attacks player automatically', () => {
     const players = createPlayers('human', 'computer', 1, 1)
     const [human, computer] = players
     computer.gameboard.placeShip(computer.gameboard.board, 1, 0, 0, computer.gameboard, 'onefer')
@@ -131,5 +131,26 @@ test('log a missed player and computer shot', () => {
     human.attack(computer, 0, 0)
     expect(computer.gameboard.missedShots[0]).toEqual([0, 0])
     expect(human.gameboard.missedShots[0]).toBeTruthy()
-    console.log(human.gameboard.missedShots[0])
+})
+
+test.skip('computer fires follow up shot to duplicate shot', () => {
+    const players = createPlayers('human', 'computer', 1, 2)
+    const [human, computer] = players
+    computer.computerAttack(human, 0, 0)
+
+    const coords = genRandomCoords(human)
+    console.log(coords)
+    expect(coords).toEqual([0, 1])
+})
+
+test.skip('game starts w/comp and human player', () => {
+    const game = initGame()
+    const [human, computer] = game
+    expect(human.type).toBe('human')
+})
+
+test.only('battleship placed on field', () => {
+    const players = createPlayers('human', 'computer', 5, 5)
+    const [human, computer] = players
+    human.gameboard.placeShip(human.gameboard.board, 3, 0, 0, human.gameboard, 'threefer', true)
 })

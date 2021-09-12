@@ -4,18 +4,29 @@ function createShip(length, startX, startY, shipTitle) {
     const ship = {
         name: shipTitle,
         shipLength: length,
-        hitsTaken: initializeHitsTaken(length),
+        // hitsTaken: initializeHitsTaken(length),
+        hitsTaken: [],
         sunkStatus: false,
         hit: function (x, y) {
-            for (let position of this.hitsTaken) {
-                if (!position.length) {
-                    position.push(x, y)
-                    if (isSunk(this)) {
-                        this.sunkStatus = true
-                    }
-                    break
-                }
+            console.log('hit!')
+            let coordToString = `${x},${y}`
+            if (!this.hitsTaken.includes(coordToString)) {
+                this.hitsTaken.push(coordToString)
+
             }
+            if (isSunk(this)) {
+                this.sunkStatus = true
+            }
+            // for (let position of this.hitsTaken) {
+            //     if (!position.length) {
+            //         position.push(x, y)
+            //         if (isSunk(this)) {
+            //             this.sunkStatus = true
+            //         }
+            //         break
+            //     }
+            // }
+            console.log(this)
         },
         isSunk: function () {
             return isSunk(this)
@@ -31,10 +42,12 @@ function initializeHitsTaken(length) {
     }
     return hitsTaken
 }
+
 function isSunk(currentShip) {
-    const shipStatus = currentShip.hitsTaken
-    function checkIfHit(arr) {
-        return arr.length
-    }
-    return shipStatus.every(checkIfHit)
+    return currentShip.shipLength === currentShip.hitsTaken.length
+    // const shipStatus = currentShip.hitsTaken
+    // function checkIfHit(arr) {
+    //     return arr.length
+    // }
+    // return shipStatus.every(checkIfHit)
 }
