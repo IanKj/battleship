@@ -1,3 +1,7 @@
 import { initGame } from './gameLoop.js'
 
-initGame()
+export { human, computer }
+
+const [human, computer] = initGame()
+
+

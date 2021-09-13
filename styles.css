@@ -24,11 +24,13 @@ body{
     min-width: 500px;
 }
   
+.humanContainer .shipPresent {
+    background-color: green;
+}
 .grid-item {
     height: 40px;
     background-color: gray;
     text-align: center;
-  
 }
 
 .hit {

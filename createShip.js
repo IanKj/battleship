@@ -19,6 +19,7 @@ function createShip(length, startX, startY, shipTitle) {
                 this.hitsTaken.forEach(hit => {
                     let currGrid = document.querySelector(`.${target}Container [data-coords="${hit}"]`)
                     currGrid.classList.add('sunken')
+                    currGrid.classList.remove('shipPresent')
                 })
             }
         },
