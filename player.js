@@ -1,6 +1,6 @@
 import { createShip } from './createShip.js'
 
-import { createGameboard } from './gameboard.js'
+import { createGameboard, genRandomCoords } from './gameboard.js'
 
 export { createPlayers }
 
@@ -8,7 +8,7 @@ export { createPlayers }
 function createPlayers(human, computer, l, w) {
     const players = [{
         type: human,
-        // turn: true,
+        turn: true,
         gameboard: createGameboard(l, w, human),
         attack: function (target, x, y) {
             attack(target, x, y)
@@ -16,7 +16,7 @@ function createPlayers(human, computer, l, w) {
     },
     {
         type: computer,
-        //turn: false,
+        turn: false,
         gameboard: createGameboard(l, w, computer),
         computerAttack: function (human, x, y) {
             attack(human, x, y)

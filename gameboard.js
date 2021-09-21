@@ -1,4 +1,4 @@
-export { createGameboard, checkIfWithinBounds, checkIfAllSunk }
+export { createGameboard, checkIfWithinBounds, checkIfAllSunk, genRandomCoords }
 
 import { createShip } from './createShip.js'
 import { human, computer } from './index.js'
@@ -104,26 +104,38 @@ function receiveAttack(x, y, gameboard) {
 
     }
 
-    const [ranX, ranY] = genRandomCoords(human)
-    computer.computerAttack(human, ranX, ranY)
+    let [ranX, ranY] = genRandomCoords(human)
+    console.log(computer)
+    if (computer.turn == true) {
+        computer.turn = false
+        computer.computerAttack(human, ranX, ranY)
+        console.log(computer)
+    }
+
     return
 }
 
+//when player picks a spot
+// player turn is false
+//computer attack will only fire if player turn is false
 
-function genRandomCoords(player) {
+
+const genRandomCoords = player => {
+    console.log('inside genRandomCoords functin...')
     let coords = []
     const length = player.gameboard.boardLength
     const width = player.gameboard.boardWidth
     const ranX = Math.floor(Math.random() * length)
     const ranY = Math.floor(Math.random() * width)
     coords.push(ranX, ranY)
-    if (checkForDuplicateCoords(coords, player.gameboard.missedShots)) {
+    if (!checkForDuplicateCoords(coords, player.gameboard.missedShots)) {
+        return coords
+    }
+    else {
+
         console.log(`a duplicate coord was found: ${coords}`)
         coords = []
         genRandomCoords(player)
-    }
-    else {
-        return coords
     }
 }
 
